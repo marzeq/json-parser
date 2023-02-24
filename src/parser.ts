@@ -9,44 +9,44 @@ export const parse = (text: string): any => {
 
 	let index = 0
 
-	const consume = (type: TokenType) => {
+	const consume = <T extends TokenType>(type: T): Token<T> => {
 		if (tokens[index].type !== type) {
 			throw new Error(`Unexpected token ${tokens[index].type} at index ${index}`)
 		}
 
 		index++
 
-		return tokens[index - 1]
+		return tokens[index - 1] as Token<T>
 	}
 
 	const parseString = (): string => {
 		const token = consume("string")
 
-		return (token as Token<"string">).value
+		return token.value
 	}
 
 	const parseNumber = (): number => {
 		const token = consume("number")
 
-		return (token as Token<"number">).value
+		return token.value
 	}
 
 	const parseHex = (): number => {
 		const token = consume("hex")
 
-		return (token as Token<"hex">).value
+		return token.value
 	}
 
 	const parseOctal = (): number => {
 		const token = consume("octal")
 
-		return (token as Token<"octal">).value
+		return token.value
 	}
 
 	const parseBool = (): boolean => {
 		const token = consume("bool")
 
-		return (token as Token<"bool">).value
+		return token.value
 	}
 
 	const parseNull = (): null => {
