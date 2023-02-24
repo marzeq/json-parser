@@ -128,5 +128,26 @@ export const parse = (text: string): any => {
 		return arr
 	}
 
-	return parseObject()
+	// check first token to see if it's an object or array, or something else
+	const token = tokens[index]
+
+	switch (token.type) {
+		case "opencurly":
+			return parseObject()
+		case "openarray":
+			return parseArray()
+		case "eof":
+			throw new Error("Unexpected end of input")
+		case "string":
+		case "number":
+		case "hex":
+		case "octal":
+		case "bool":
+		case "null":
+			return parseValue()
+		default:
+			throw new Error(`Unexpected token ${token.type} at index ${index}`)
+	}
+
+	throw new Error("Unreachable")
 }
