@@ -1,6 +1,14 @@
 import { parse } from "./parser"
 import isEqual from "lodash.isequal"
 
+const safeParse = (text: string) => {
+	try {
+		return parse(text)
+	} catch {
+		return undefined
+	}
+}
+
 let anyFailed = false
 
 const test = (condition: boolean, message?: string) => {
@@ -12,21 +20,21 @@ const test = (condition: boolean, message?: string) => {
 	}
 }
 
-test(isEqual(parse(`"value"`), "value"), "String parse")
-test(isEqual(parse(`123`), 123), "Number parse")
-test(isEqual(parse(`0x123`), 291), "Hex parse")
-test(isEqual(parse(`0o123`), 83), "Octal parse")
-test(isEqual(parse(`true`), true), "True parse")
-test(isEqual(parse(`false`), false), "False parse")
-test(isEqual(parse(`null`), null), "Null parse")
-test(isEqual(parse(`[]`), []), "Empty array parse")
-test(isEqual(parse(`[1, 2, 3]`), [1, 2, 3]), "Array parse")
-test(isEqual(parse(`{}`), {}), "Empty object parse")
-test(isEqual(parse(`[1,]`), [1]), "Trailing comma parse")
+test(isEqual(safeParse(`"value"`), "value"), "String parse")
+test(isEqual(safeParse(`123`), 123), "Number parse")
+test(isEqual(safeParse(`0x123`), 291), "Hex parse")
+test(isEqual(safeParse(`0o123`), 83), "Octal parse")
+test(isEqual(safeParse(`true`), true), "True parse")
+test(isEqual(safeParse(`false`), false), "False parse")
+test(isEqual(safeParse(`null`), null), "Null parse")
+test(isEqual(safeParse(`[]`), []), "Empty array parse")
+test(isEqual(safeParse(`[1, 2, 3]`), [1, 2, 3]), "Array parse")
+test(isEqual(safeParse(`{}`), {}), "Empty object parse")
+test(isEqual(safeParse(`[1,]`), [1]), "Trailing comma parse")
 
 test(
 	isEqual(
-		parse(
+		safeParse(
 			`{
 	"key": "value",
 	"key2": 123,
