@@ -4,7 +4,8 @@ import isEqual from "lodash.isequal"
 const safeParse = (text: string) => {
 	try {
 		return parse(text)
-	} catch {
+	} catch (error) {
+		console.error(error)
 		return undefined
 	}
 }
