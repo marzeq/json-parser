@@ -1,26 +1,30 @@
 import { parse } from "./parser"
 import isEqual from "lodash.isequal"
 
-const assert = (condition: boolean, message?: string) => {
+let anyFailed = false
+
+const test = (condition: boolean, message?: string) => {
 	if (!condition) {
-		console.error(`Assertion failed${message ? `: ${message}` : ""}`)
-		process.exit(1)
+		console.error(`✘ | Failed${message ? `: ${message}` : ""}`)
+		anyFailed = true
+	} else {
+		console.log(`✓ | Passed${message ? `: ${message}` : ""}`)
 	}
 }
 
-assert(isEqual(parse(`"value"`), "value"), "String parse test")
-assert(isEqual(parse(`123`), 123), "Number parse test")
-assert(isEqual(parse(`0x123`), 291), "Hex parse test")
-assert(isEqual(parse(`0o123`), 83), "Octal parse test")
-assert(isEqual(parse(`true`), true), "True parse test")
-assert(isEqual(parse(`false`), false), "False parse test")
-assert(isEqual(parse(`null`), null), "Null parse test")
-assert(isEqual(parse(`[]`), []), "Empty array parse test")
-assert(isEqual(parse(`[1, 2, 3]`), [1, 2, 3]), "Array parse test")
-assert(isEqual(parse(`{}`), {}), "Empty object parse test")
-assert(isEqual(parse(`[1,]`), [1]), "Trailing comma parse test")
+test(isEqual(parse(`"value"`), "value"), "String parse")
+test(isEqual(parse(`123`), 123), "Number parse")
+test(isEqual(parse(`0x123`), 291), "Hex parse")
+test(isEqual(parse(`0o123`), 83), "Octal parse")
+test(isEqual(parse(`true`), true), "True parse")
+test(isEqual(parse(`false`), false), "False parse")
+test(isEqual(parse(`null`), null), "Null parse")
+test(isEqual(parse(`[]`), []), "Empty array parse")
+test(isEqual(parse(`[1, 2, 3]`), [1, 2, 3]), "Array parse")
+test(isEqual(parse(`{}`), {}), "Empty object parse")
+test(isEqual(parse(`[1,]`), [1]), "Trailing comma parse")
 
-assert(
+test(
 	isEqual(
 		parse(
 			`{
@@ -49,7 +53,9 @@ assert(
 			key10: 83
 		}
 	),
-	"Full parse test"
+	"Full parse"
 )
 
-console.log("All tests passed")
+if (!anyFailed) {
+	console.log("\n✓ | All tests passed")
+}
